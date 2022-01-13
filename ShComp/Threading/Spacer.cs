@@ -37,7 +37,7 @@ public class Spacer
         finally { _semaphore.Release(); }
 
         var task = Task.Delay(delay, cts.Token);
-        await task;
+        try { await task; } catch { }
 
         if (!task.IsCanceled)
         {

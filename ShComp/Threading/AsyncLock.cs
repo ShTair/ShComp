@@ -2,7 +2,12 @@
 
 public readonly struct AsyncLock
 {
-    private readonly SemaphoreSlim _semaphore = new(1, 1);
+    private readonly SemaphoreSlim _semaphore;
+
+    public AsyncLock()
+    {
+        _semaphore = new(1, 1);
+    }
 
     public readonly void Lock(Action func)
     {

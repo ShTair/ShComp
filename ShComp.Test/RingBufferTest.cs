@@ -45,4 +45,14 @@ public class RingBufferTest
 
         Assert.False(buffer.Remove());
     }
+
+    [Fact]
+    public void ForeachTest()
+    {
+        var buffer = new RingBuffer<int>(3) { 1 };
+        foreach (var item in buffer)
+        {
+            Assert.Equal(1, item);
+        }
+    }
 }

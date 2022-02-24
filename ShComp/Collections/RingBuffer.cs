@@ -61,7 +61,7 @@ public class RingBuffer<T> : IList<T>
     {
         for (var i = 0; i < _count; i++)
         {
-            yield return _buffer[(_nextIndex + i) % _buffer.Length]!;
+            yield return _buffer[(HeadIndex + i) % _buffer.Length]!;
         }
     }
 

@@ -21,4 +21,6 @@ public static class SslUtils
         await sslStream.AuthenticateAsClientAsync(options, cancellationToken);
         return sslStream.RemoteCertificate as X509Certificate2;
     }
+
+    public static Task<X509Certificate2?> GetCertificateAsync(string host, CancellationToken cancellationToken) => GetCertificateAsync(host, 443, cancellationToken);
 }

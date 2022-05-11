@@ -2,6 +2,8 @@
 
 public static class StringExtensions
 {
+    public static short? AsShort(this string s) => short.TryParse(s, out var result) ? result : null;
+
     public static int? AsInt(this string s) => int.TryParse(s, out var result) ? result : null;
 
     public static double? AsDouble(this string s) => double.TryParse(s, out var result) ? result : null;

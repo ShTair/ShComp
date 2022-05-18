@@ -1,19 +1,24 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using System.Reflection;
 
 namespace ShComp.DependencyInjection;
 
 public static class Extensions
 {
-    public static void ConfigureUsingOptions<T>(this IServiceCollection services, IConfiguration configuration)
+    public static void ConfigureUsingOptions<T>(this IServiceCollection services)
     {
-        var configMethod = typeof(OptionsConfigurationServiceCollectionExtensions)
-            .GetMethod("Configure", new[] { typeof(IServiceCollection), typeof(IConfiguration) })!;
+        var configureMethod = typeof(Extensions).GetMethod(
+            nameof(Configure),
+            BindingFlags.Static | BindingFlags.NonPublic,
+            new[] { typeof(IServiceCollection), typeof(string) })!;
 
         var parentType = typeof(T);
         var types = parentType.GetNestedTypes();
+
+        services.AddOptions();
 
         foreach (var type in types)
         {
@@ -29,20 +34,35 @@ public static class Extensions
 
             if (sectionName is null) continue;
 
-            var genericConfigMethod = configMethod.MakeGenericMethod(type);
-            genericConfigMethod.Invoke(null, new object[] { services, configuration.GetSection(sectionName) });
+            var bound = configureMethod.MakeGenericMethod(type);
+            bound.Invoke(null, new object[] { services, sectionName });
         }
     }
 
-    public static void AddSingletonWithConfiguration<T>(this IServiceCollection services, IConfiguration configuration) where T : class
+    private static void Configure<TOptions>(IServiceCollection services, string sectionName) where TOptions : class
     {
-        services.ConfigureUsingOptions<T>(configuration);
+        services.AddSingleton<IOptionsChangeTokenSource<TOptions>>(provider =>
+        {
+            var config = provider.GetRequiredService<IConfiguration>();
+            return new ConfigurationChangeTokenSource<TOptions>(Options.DefaultName, config.GetSection(sectionName));
+        });
+
+        services.AddSingleton<IConfigureOptions<TOptions>>(provider =>
+        {
+            var config = provider.GetRequiredService<IConfiguration>();
+            return new NamedConfigureFromConfigurationOptions<TOptions>(Options.DefaultName, config.GetSection(sectionName), delegate { });
+        });
+    }
+
+    public static void AddSingletonAndConfigure<T>(this IServiceCollection services) where T : class
+    {
+        services.ConfigureUsingOptions<T>();
         services.AddSingleton<T>();
     }
 
-    public static void AddHostedServiceWithConfiguration<T>(this IServiceCollection services, IConfiguration configuration) where T : class, IHostedService
+    public static void AddHostedServiceAndConfigure<T>(this IServiceCollection services) where T : class, IHostedService
     {
-        services.ConfigureUsingOptions<T>(configuration);
+        services.ConfigureUsingOptions<T>();
         services.AddHostedService<T>();
     }
 }

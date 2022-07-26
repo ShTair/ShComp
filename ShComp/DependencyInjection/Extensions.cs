@@ -43,15 +43,22 @@ public static class Extensions
     {
         services.AddSingleton<IOptionsChangeTokenSource<TOptions>>(provider =>
         {
-            var config = provider.GetRequiredService<IConfiguration>();
-            return new ConfigurationChangeTokenSource<TOptions>(Options.DefaultName, config.GetSection(sectionName));
+            var configuration = GetConfigurationSection(provider, sectionName);
+            return new ConfigurationChangeTokenSource<TOptions>(Options.DefaultName, configuration);
         });
 
         services.AddSingleton<IConfigureOptions<TOptions>>(provider =>
         {
-            var config = provider.GetRequiredService<IConfiguration>();
-            return new NamedConfigureFromConfigurationOptions<TOptions>(Options.DefaultName, config.GetSection(sectionName), delegate { });
+            var configuration = GetConfigurationSection(provider, sectionName);
+            return new NamedConfigureFromConfigurationOptions<TOptions>(Options.DefaultName, configuration, delegate { });
         });
+    }
+
+    private static IConfiguration GetConfigurationSection(IServiceProvider provider, string sectionName)
+    {
+        var configuration = provider.GetRequiredService<IConfiguration>();
+        if (string.IsNullOrEmpty(sectionName)) return configuration;
+        return configuration.GetSection(sectionName);
     }
 
     public static void AddSingletonAndConfigure<T>(this IServiceCollection services) where T : class

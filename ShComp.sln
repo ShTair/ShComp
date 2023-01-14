@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShComp_Core3_1", "ShComp_Co
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShComp", "ShComp\ShComp.csproj", "{E4880B70-0C1F-427D-A88F-18FC49C29C8B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShComp.Test", "ShComp.Test\ShComp.Test.csproj", "{1D28106E-D8C9-4681-A787-C1BAFF86C9C7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShComp.Test", "ShComp.Test\ShComp.Test.csproj", "{1D28106E-D8C9-4681-A787-C1BAFF86C9C7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShComp.Updater", "ShComp.Updater\ShComp.Updater.csproj", "{8448F666-EA6A-4924-A3C9-19060924E9CA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{1D28106E-D8C9-4681-A787-C1BAFF86C9C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1D28106E-D8C9-4681-A787-C1BAFF86C9C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1D28106E-D8C9-4681-A787-C1BAFF86C9C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8448F666-EA6A-4924-A3C9-19060924E9CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8448F666-EA6A-4924-A3C9-19060924E9CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8448F666-EA6A-4924-A3C9-19060924E9CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8448F666-EA6A-4924-A3C9-19060924E9CA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

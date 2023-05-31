@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShComp.Updater", "ShComp.Up
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShComp.Utils", "ShComp.Utils\ShComp.Utils.csproj", "{BEF37125-C789-479F-8450-BDBEAF1EBC74}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShComp.Api.OpenAI", "ShComp.Api.OpenAI\ShComp.Api.OpenAI.csproj", "{7F66E355-2E90-437F-9024-6BAC35B43254}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShComp.Api.OpenAI", "ShComp.Api.OpenAI\ShComp.Api.OpenAI.csproj", "{7F66E355-2E90-437F-9024-6BAC35B43254}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShComp.Api.OpenAI.Test", "ShComp.Api.OpenAI.Test\ShComp.Api.OpenAI.Test.csproj", "{4ED46FC7-B47A-408C-8EF6-89E8E41F1F70}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{7F66E355-2E90-437F-9024-6BAC35B43254}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7F66E355-2E90-437F-9024-6BAC35B43254}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7F66E355-2E90-437F-9024-6BAC35B43254}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4ED46FC7-B47A-408C-8EF6-89E8E41F1F70}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4ED46FC7-B47A-408C-8EF6-89E8E41F1F70}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4ED46FC7-B47A-408C-8EF6-89E8E41F1F70}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4ED46FC7-B47A-408C-8EF6-89E8E41F1F70}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

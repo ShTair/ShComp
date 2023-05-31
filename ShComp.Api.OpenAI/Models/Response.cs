@@ -17,7 +17,7 @@ public class Response
     public string Model { get; set; } = default!;
 
     [JsonPropertyName("usage")]
-    public Usage Usage { get; set; } = default!;
+    public Usage? Usage { get; set; }
 
     [JsonPropertyName("choices")]
     public Choice[] Choices { get; set; } = default!;

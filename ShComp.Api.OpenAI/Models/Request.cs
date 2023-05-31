@@ -16,6 +16,9 @@ public class Request : IWithModel, IWithMaxTokens, IWithTemperature, IRequestCre
     [JsonPropertyName("messages")]
     public IList<Message> Messages { get; set; }
 
+    [JsonPropertyName("stream")]
+    public bool Stream { get; set; }
+
 #pragma warning disable CS8618
     private Request() { }
 #pragma warning restore CS8618

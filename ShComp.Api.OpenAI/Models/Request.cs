@@ -31,7 +31,7 @@ public class Request : IWithModel, IWithMaxTokens, IWithTemperature, IRequestCre
         Messages = messages;
     }
 
-    public static Request Create(IList<Message> messages) => new("gpt-3.5-turbo", 1000, 1, messages);
+    public static Request Create(IList<Message> messages) => new(GptModels.Gpt3_5Turbo, 1000, 1, messages);
 
     public static IWithModel Define()
     {
@@ -40,7 +40,19 @@ public class Request : IWithModel, IWithMaxTokens, IWithTemperature, IRequestCre
 
     IWithMaxTokens IWithModel.WithGpt3_5Turbo()
     {
-        Model = "gpt-3.5-turbo";
+        Model = GptModels.Gpt3_5Turbo;
+        return this;
+    }
+
+    IWithMaxTokens IWithModel.WithGpt4()
+    {
+        Model = GptModels.Gpt4;
+        return this;
+    }
+
+    IWithMaxTokens IWithModel.With(string modelName)
+    {
+        Model = modelName;
         return this;
     }
 
@@ -66,6 +78,10 @@ public class Request : IWithModel, IWithMaxTokens, IWithTemperature, IRequestCre
 public interface IWithModel
 {
     IWithMaxTokens WithGpt3_5Turbo();
+
+    IWithMaxTokens WithGpt4();
+
+    IWithMaxTokens With(string modelName);
 }
 
 public interface IWithMaxTokens

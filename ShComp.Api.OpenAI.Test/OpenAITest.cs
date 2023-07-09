@@ -29,15 +29,19 @@ public class OpenAITest
     [Fact]
     public async Task CompletionsStreamTest()
     {
-        var messages = new[] { Message.CreateUser("こんにちは") };
+        var messages = new[] { Message.CreateUser("C#のコンテキストキーワードについて教えてください") };
         var request = Request.Define().WithGpt3_5Turbo().WithMaxTokens(1000).WithTemperature(0).Create(messages);
 
-        await foreach (var chunk in _client.CompletionsStreamAsync(request))
+        try
         {
-            if (chunk is { Choices: [{ Delta: { Content: { } content } }, ..] })
+            await foreach (var chunk in _client.CompletionsStreamAsync(request))
             {
-                Debug.Write(content);
+                if (chunk is { Choices: [{ Delta: { Content: { } content } }, ..] })
+                {
+                    Debug.Write($"{content},");
+                }
             }
         }
+        finally { Debug.WriteLine(""); }
     }
 }

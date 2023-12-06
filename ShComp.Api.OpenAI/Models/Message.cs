@@ -2,25 +2,56 @@
 
 namespace ShComp.Api.OpenAI.Models;
 
-public class Message
+[JsonDerivedType(typeof(StringMessage))]
+[JsonDerivedType(typeof(VisionMessage))]
+public abstract class Message
 {
     [JsonPropertyName("role")]
-    public string Role { get; set; }
+    public string Role { get; set; } = default!;
 
+    public static StringMessage CreateSystem(string content) => new(MessageRoleTypes.System, content);
+
+    public static StringMessage CreateUser(string content) => new(MessageRoleTypes.User, content);
+
+    public static StringMessage CreateAssistant(string content) => new(MessageRoleTypes.Assistant, content);
+}
+
+public class StringMessage : Message
+{
     [JsonPropertyName("content")]
     public string Content { get; set; }
 
-    public Message(string role, string content)
+    public StringMessage(string role, string content)
     {
         Role = role;
         Content = content;
     }
 
     public override string ToString() => $"{Role}: {Content}";
+}
 
-    public static Message CreateSystem(string content) => new(MessageRoleTypes.System, content);
+public class VisionMessage : Message
+{
+    [JsonPropertyName("content")]
+    public List<IVisionContent> Contents { get; set; }
 
-    public static Message CreateUser(string content) => new(MessageRoleTypes.User, content);
+    public VisionMessage(string role, List<IVisionContent> contents)
+    {
+        Role = role;
+        Contents = contents;
+    }
 
-    public static Message CreateAssistant(string content) => new(MessageRoleTypes.Assistant, content);
+    public VisionMessage(string role, string text, params ImageUrlContent[] images)
+    {
+        Role = role;
+        Contents = [new TextContent(text), .. images];
+    }
+
+    public VisionMessage(string role, string text, params string[] urls)
+    {
+        Role = role;
+        Contents = [new TextContent(text), .. urls.Select(t => new ImageUrlContent(t))];
+    }
+
+    public override string ToString() => $"{Role}: {Contents.Count}";
 }

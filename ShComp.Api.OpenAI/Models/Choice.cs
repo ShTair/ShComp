@@ -5,7 +5,7 @@ namespace ShComp.Api.OpenAI.Models;
 public class Choice
 {
     [JsonPropertyName("message")]
-    public Message? Message { get; set; }
+    public StringMessage? Message { get; set; }
 
     [JsonPropertyName("delta")]
     public Delta? Delta { get; set; }

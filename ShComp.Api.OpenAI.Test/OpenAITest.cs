@@ -57,7 +57,11 @@ public class OpenAITest
 
         //var messages = new[] { new VisionMessage(MessageRoleTypes.User, "この図を、mermaid記法で書き直してください。SequenceDiagramを使うのが適切だと思います。上部の青い四角は、担当チームを表しています。", new ImageUrlContent(_configuration["OpenAI:ImageUrl"]!, ImageUrlDetails.High)) };
 
-        var request = Request.Define().WithGpt4TurboWithVision().WithMaxTokens(3000).WithTemperature(0).Create(messages);
+        var request = Request.Define()
+            .WithGpt4TurboWithVision()
+            .WithMaxTokens(3000)
+            .WithTemperature(0)
+            .Create(messages);
 
         var response = await _client.CompletionsAsync(request);
 

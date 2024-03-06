@@ -9,7 +9,7 @@ public class GptModels
     public const string Gpt4 = "gpt-4";
 
     /// <summary>GPT-4 Turbo</summary>
-    public const string Gpt4Turbo = "gpt-4-1106-preview";
+    public const string Gpt4Turbo = "gpt-4-turbo-preview";
 
     /// <summary>GPT-4 Turbo with vision</summary>
     public const string Gpt4TurboWithVision = "gpt-4-vision-preview";

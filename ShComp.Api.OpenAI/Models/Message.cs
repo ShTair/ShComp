@@ -19,15 +19,43 @@ public abstract class Message
 public class StringMessage : Message
 {
     [JsonPropertyName("content")]
-    public string Content { get; set; }
+    public string? Content { get; set; }
 
-    public StringMessage(string role, string content)
+    [JsonPropertyName("tool_call_id")]
+    public string? ToolCallId { get; set; }
+
+    [JsonPropertyName("tool_calls")]
+    public ToolCall[]? ToolCalls { get; set; }
+
+    public StringMessage(string role, string content, string? toolCallId = default)
     {
         Role = role;
         Content = content;
+        ToolCallId = toolCallId;
     }
 
     public override string ToString() => $"{Role}: {Content}";
+}
+
+public class ToolCall
+{
+    [JsonPropertyName("id")]
+    public required string Id { get; set; }
+
+    [JsonPropertyName("type")]
+    public required string Type { get; set; }
+
+    [JsonPropertyName("function")]
+    public required CallFunction Function { get; set; }
+}
+
+public class CallFunction
+{
+    [JsonPropertyName("name")]
+    public required string Name { get; set; }
+
+    [JsonPropertyName("arguments")]
+    public required string Arguments { get; set; }
 }
 
 public class VisionMessage : Message

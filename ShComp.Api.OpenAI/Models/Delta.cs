@@ -9,4 +9,28 @@ public class Delta
 
     [JsonPropertyName("content")]
     public string? Content { get; set; }
+
+    [JsonPropertyName("tool_calls")]
+    public ToolCallDelta[]? ToolCalls { get; set; }
+}
+
+public class ToolCallDelta
+{
+    [JsonPropertyName("id")]
+    public string? Id { get; set; }
+
+    [JsonPropertyName("type")]
+    public string? Type { get; set; }
+
+    [JsonPropertyName("function")]
+    public required CallFunctionDelta Function { get; set; }
+}
+
+public class CallFunctionDelta
+{
+    [JsonPropertyName("name")]
+    public string? Name { get; set; }
+
+    [JsonPropertyName("arguments")]
+    public required string Arguments { get; set; }
 }

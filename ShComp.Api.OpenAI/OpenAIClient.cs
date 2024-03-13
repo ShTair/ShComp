@@ -1,7 +1,9 @@
 ﻿using ShComp.Api.OpenAI.Models;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
 namespace ShComp.Api.OpenAI;
@@ -10,6 +12,8 @@ public sealed partial class OpenAIClient : IDisposable
 {
     private readonly bool _disposeClient;
     private readonly HttpClient _client;
+
+    private readonly JsonSerializerOptions _jsonSerializerOptions;
 
     public OpenAIClient(string apiKey, int timeout = 30000) : this(new HttpClient(), apiKey, timeout)
     {
@@ -22,6 +26,12 @@ public sealed partial class OpenAIClient : IDisposable
         _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
         _client.BaseAddress = new Uri("https://api.openai.com/v1/chat/");
         _client.Timeout = TimeSpan.FromMilliseconds(timeout);
+
+        _jsonSerializerOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web)
+        {
+            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+        };
     }
 
     public void Dispose()
@@ -32,7 +42,7 @@ public sealed partial class OpenAIClient : IDisposable
     public async Task<Response?> CompletionsAsync(Request request)
     {
         using var req = new HttpRequestMessage(HttpMethod.Post, "completions");
-        req.Content = JsonContent.Create(request);
+        req.Content = JsonContent.Create(request, options: _jsonSerializerOptions);
 
         using var res = await _client.SendAsync(req);
         return await res.Content.ReadFromJsonAsync<Response>();
@@ -42,7 +52,7 @@ public sealed partial class OpenAIClient : IDisposable
     {
         request.Stream = true;
         using var req = new HttpRequestMessage(HttpMethod.Post, "completions");
-        req.Content = JsonContent.Create(request);
+        req.Content = JsonContent.Create(request, options: _jsonSerializerOptions);
 
         await foreach (var data in PostUsingServerSentEventsAsync(req))
         {

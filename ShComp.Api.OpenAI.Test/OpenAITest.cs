@@ -72,4 +72,71 @@ public class OpenAITest
         var cost = response.Usage!.PromptTokens * 0.00001 + response.Usage.CompletionTokens * 0.00003;
         var yen = cost * 150;
     }
+
+    [Fact]
+    public async Task FunctionTest()
+    {
+        var tools = Tools.Define()
+            .AddFunction("display_message")
+                .WithDescription("メッセージを画面に表示します。現在のメッセージは上書きされます。")
+                .AddStringProperty("message", true)
+                    .WithDescription("表示するメッセージ")
+            .AddFunction("get_message")
+                .WithDescription("表示しているメッセージを取得します。")
+            .GetTools();
+
+        var messages = new List<Message> { Message.CreateUser("画面のメッセージの末尾に、こんにちはって追加して。") };
+
+        var request = Request.Define()
+            .WithGpt4Turbo()
+            .WithMaxTokens(3000)
+            .WithTemperature(0)
+            .Create(messages, tools);
+
+        var response = await _client.CompletionsAsync(request);
+
+        messages.Add(response!.Choices[0].Message!);
+        messages.Add(new StringMessage(MessageRoleTypes.Tool, "がんばれ", response!.Choices[0].Message!.ToolCalls![0].Id));
+
+        request = Request.Define()
+            .WithGpt4Turbo()
+            .WithMaxTokens(3000)
+            .WithTemperature(0)
+            .Create(messages, tools);
+
+        response = await _client.CompletionsAsync(request);
+    }
+
+    [Fact]
+    public async Task FunctionStreamTest()
+    {
+        var tools = Tools.Define()
+            .AddFunction("display_message")
+                .WithDescription("メッセージを画面に表示します。現在のメッセージは上書きされます。")
+                .AddStringProperty("message", true)
+                    .WithDescription("表示するメッセージ")
+            .AddFunction("get_message")
+                .WithDescription("表示しているメッセージを取得します。")
+            .GetTools();
+
+        var messages = new List<Message> { Message.CreateUser("画面のメッセージの末尾に、こんにちはって追加して。") };
+
+        var request = Request.Define()
+            .WithGpt4Turbo()
+            .WithMaxTokens(3000)
+            .WithTemperature(0)
+            .Create(messages, tools);
+
+        try
+        {
+            await foreach (var chunk in _client.CompletionsStreamAsync(request))
+            {
+                if (chunk is { Choices: [{ Delta.Content: { } content }, ..] })
+                {
+                    Debug.Write($"{content},");
+                }
+            }
+        }
+        finally { Debug.WriteLine(""); }
+    }
 }

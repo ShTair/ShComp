@@ -16,6 +16,9 @@ public class Request : IWithModel, IWithMaxTokens, IWithTemperature, IRequestCre
     [JsonPropertyName("messages")]
     public IList<Message> Messages { get; set; }
 
+    [JsonPropertyName("tools")]
+    public IList<Tool>? Tools { get; set; }
+
     [JsonPropertyName("stream")]
     public bool Stream { get; set; }
 
@@ -80,9 +83,10 @@ public class Request : IWithModel, IWithMaxTokens, IWithTemperature, IRequestCre
         return this;
     }
 
-    Request IRequestCreatable.Create(IList<Message> messages)
+    Request IRequestCreatable.Create(IList<Message> messages, IList<Tool>? tools)
     {
         Messages = messages;
+        Tools = tools;
         return this;
     }
 }
@@ -112,5 +116,5 @@ public interface IWithTemperature
 
 public interface IRequestCreatable
 {
-    Request Create(IList<Message> messages);
+    Request Create(IList<Message> messages, IList<Tool>? tools = null);
 }

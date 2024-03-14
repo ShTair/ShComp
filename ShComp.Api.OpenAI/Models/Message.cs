@@ -14,6 +14,8 @@ public abstract class Message
     public static StringMessage CreateUser(string content) => new(MessageRoleTypes.User, content);
 
     public static StringMessage CreateAssistant(string content) => new(MessageRoleTypes.Assistant, content);
+
+    public static StringMessage CreateTool(string content) => new(MessageRoleTypes.Tool, content);
 }
 
 public class StringMessage : Message
@@ -25,7 +27,7 @@ public class StringMessage : Message
     public string? ToolCallId { get; set; }
 
     [JsonPropertyName("tool_calls")]
-    public ToolCall[]? ToolCalls { get; set; }
+    public List<ToolCall>? ToolCalls { get; set; }
 
     public StringMessage(string role, string content, string? toolCallId = default)
     {

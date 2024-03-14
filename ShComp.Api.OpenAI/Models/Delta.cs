@@ -16,6 +16,9 @@ public class Delta
 
 public class ToolCallDelta
 {
+    [JsonPropertyName("index")]
+    public int Index { get; set; }
+
     [JsonPropertyName("id")]
     public string? Id { get; set; }
 

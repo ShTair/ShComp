@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using ShComp.Api.OpenAI.Models;
 using System.Diagnostics;
+using System.Text.Json.Serialization;
 
 namespace ShComp.Api.OpenAI.Test;
 
@@ -119,6 +120,10 @@ public class OpenAITest
                 .WithDescription("表示しているメッセージを取得します。")
             .GetTools();
 
+        var invoker = new FunctionInvoker();
+        invoker.Register<DisplayMessageParameters>("display_message", DisplayMessage);
+        invoker.Register<GetMessageParameters>("get_message", GetMessage);
+
         var messages = new List<Message> { Message.CreateUser("画面のメッセージの末尾に、こんにちはって追加して。") };
 
         var request = Request.Define()
@@ -127,16 +132,28 @@ public class OpenAITest
             .WithTemperature(0)
             .Create(messages, tools);
 
-        try
-        {
-            await foreach (var chunk in _client.CompletionsStreamAsync(request))
-            {
-                if (chunk is { Choices: [{ Delta.Content: { } content }, ..] })
-                {
-                    Debug.Write($"{content},");
-                }
-            }
-        }
-        finally { Debug.WriteLine(""); }
+        var res = await _client.CompletionsStreamAsync(request, chunk => Debug.WriteLine(chunk));
+        var fms = await invoker.InvokeAsync(res!.Choices[0]);
+
+        request.Messages = [.. messages, res.Choices[0].Message!, .. fms];
+        res = await _client.CompletionsStreamAsync(request, chunk => Debug.WriteLine(chunk));
+    }
+
+    private class DisplayMessageParameters
+    {
+        [JsonPropertyName("message")]
+        public required string Message { get; set; }
+    }
+
+    private static Task<string> DisplayMessage(DisplayMessageParameters parameters)
+    {
+        return Task.FromResult("ok");
+    }
+
+    private class GetMessageParameters { }
+
+    private static Task<string> GetMessage(GetMessageParameters parameters)
+    {
+        return Task.FromResult("へい！");
     }
 }

@@ -19,6 +19,9 @@ public class Request : IWithModel, IWithMaxTokens, IWithTemperature, IRequestCre
     [JsonPropertyName("tools")]
     public IList<Tool>? Tools { get; set; }
 
+    [JsonPropertyName("response_format")]
+    public ResponseFormat? ResponseFormat { get; set; }
+
     [JsonPropertyName("stream")]
     public bool Stream { get; set; }
 

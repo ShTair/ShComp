@@ -19,8 +19,12 @@ public class OpenAITest
     [Fact]
     public async Task CompletionsTest()
     {
-        var messages = new[] { Message.CreateUser("こんにちは") };
-        var request = Request.Define().WithGpt3_5Turbo().WithMaxTokens(1000).WithTemperature(0).Create(messages);
+        var messages = new List<Message>();
+        messages.Add(new ArrayMessage(MessageRoleTypes.User, [
+            await ImageUrlContent.FromFileAsync(_configuration["OpenAI:ImageFilePath1"]!),
+            new TextContent("この画像、なんでしょうか。")]));
+
+        var request = Request.Define().WithGpt4Turbo().WithMaxTokens(1000).WithTemperature(0).Create(messages);
 
         var response = await _client.CompletionsAsync(request);
 
@@ -31,8 +35,12 @@ public class OpenAITest
     [Fact]
     public async Task CompletionsStreamTest()
     {
-        var messages = new[] { Message.CreateUser("C#のコンテキストキーワードについて教えてください") };
-        var request = Request.Define().WithGpt3_5Turbo().WithMaxTokens(1000).WithTemperature(0).Create(messages);
+        var messages = new List<Message>();
+        messages.Add(new ArrayMessage(MessageRoleTypes.User, [
+            await ImageUrlContent.FromFileAsync(_configuration["OpenAI:ImageFilePath1"]!),
+            new TextContent("この画像、なんでしょうか。")]));
+
+        var request = Request.Define().WithGpt4Turbo().WithMaxTokens(1000).WithTemperature(0).Create(messages);
 
         try
         {
@@ -50,16 +58,18 @@ public class OpenAITest
     [Fact]
     public async Task VisionCompletionsTest()
     {
-        var messages = new[] { new VisionMessage(MessageRoleTypes.User, "これ何？", new ImageUrlContent(await ImageUrl.FromFileAsync(_configuration["OpenAI:ImageFilePath1"]!), ImageUrlDetails.High)) };
+        //var messages = new[] { new VisionMessage(MessageRoleTypes.User, "これ何？", new ImageUrlContent(await ImageUrl.FromFileAsync(_configuration["OpenAI:ImageFilePath1"]!), ImageUrlDetails.High)) };
 
-        //var messages = new[] { new VisionMessage(MessageRoleTypes.User, "今日の献立は何にしようかな？", new ImageUrlContent(await ImageUrl.FromFileAsync(_configuration["OpenAI:ImageFilePath2"]!), ImageUrlDetails.High)) };
+        var messages = new[] { new ArrayMessage(MessageRoleTypes.User,[
+            (TextContent)"今日の献立は何にしようかな？",
+            new ImageUrlContent(await ImageUrl.FromFileAsync(_configuration["OpenAI:ImageFilePath2"]!), ImageUrlDetails.High)]) };
 
         //var messages = new[] { new VisionMessage(MessageRoleTypes.User, "この図を、mermaid記法で書き直してください。", new ImageUrlContent(_configuration["OpenAI:ImageUrl"]!, ImageUrlDetails.High)) };
 
         //var messages = new[] { new VisionMessage(MessageRoleTypes.User, "この図を、mermaid記法で書き直してください。SequenceDiagramを使うのが適切だと思います。上部の青い四角は、担当チームを表しています。", new ImageUrlContent(_configuration["OpenAI:ImageUrl"]!, ImageUrlDetails.High)) };
 
         var request = Request.Define()
-            .WithGpt4TurboWithVision()
+            .WithGpt4Turbo()
             .WithMaxTokens(3000)
             .WithTemperature(0)
             .Create(messages);
@@ -86,7 +96,7 @@ public class OpenAITest
                 .WithDescription("表示しているメッセージを取得します。")
             .GetTools();
 
-        var messages = new List<Message> { Message.CreateUser("画面のメッセージの末尾に、こんにちはって追加して。") };
+        var messages = new List<Message> { StringMessage.CreateUser("画面のメッセージの末尾に、こんにちはって追加して。") };
 
         var request = Request.Define()
             .WithGpt4Turbo()
@@ -97,7 +107,7 @@ public class OpenAITest
         var response = await _client.CompletionsAsync(request);
 
         messages.Add(response!.Choices[0].Message!);
-        messages.Add(new StringMessage(MessageRoleTypes.Tool, "がんばれ", response!.Choices[0].Message!.ToolCalls![0].Id));
+        messages.Add(StringMessage.CreateTool("がんばれ", response!.Choices[0].Message!.ToolCalls![0].Id));
 
         request = Request.Define()
             .WithGpt4Turbo()
@@ -124,7 +134,7 @@ public class OpenAITest
         invoker.Register<DisplayMessageParameters>("display_message", DisplayMessage);
         invoker.Register<GetMessageParameters>("get_message", GetMessage);
 
-        var messages = new List<Message> { Message.CreateUser("画面のメッセージの末尾に、こんにちはって追加して。") };
+        var messages = new List<Message> { StringMessage.CreateUser("画面のメッセージの末尾に、こんにちはって追加して。") };
 
         var request = Request.Define()
             .WithGpt4Turbo()

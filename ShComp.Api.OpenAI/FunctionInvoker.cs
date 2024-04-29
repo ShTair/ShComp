@@ -27,8 +27,7 @@ public class FunctionInvoker
                 var function = toolCall.Function;
                 var result = await _functions[function.Name](function.Arguments);
 
-                var message = Message.CreateTool(result);
-                message.ToolCallId = toolCall.Id;
+                var message = StringMessage.CreateTool(result, toolCall.Id);
                 messages.Add(message);
             }
         }

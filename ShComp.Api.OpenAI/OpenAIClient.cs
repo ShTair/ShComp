@@ -1,5 +1,4 @@
 ﻿using ShComp.Api.OpenAI.Models;
-using System.Diagnostics;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text;
@@ -66,7 +65,7 @@ public sealed partial class OpenAIClient : IDisposable
 
     public async Task<Response?> CompletionsStreamAsync(Request request, Action<string> handler)
     {
-        var message = Message.CreateAssistant(null!);
+        var message = StringMessage.CreateAssistant(null!);
         Response? response = null;
         StringBuilder? sb = null;
         string? finishReason = null;

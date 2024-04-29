@@ -5,20 +5,22 @@ namespace ShComp.Api.OpenAI.Models;
 [JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
 [JsonDerivedType(typeof(TextContent), "text")]
 [JsonDerivedType(typeof(ImageUrlContent), "image_url")]
-public interface IVisionContent { }
+public interface IMessageContent { }
 
-public class TextContent : IVisionContent
+public class TextContent : IMessageContent
 {
     [JsonPropertyName("text")]
-    public string Text { get; set; } = default!;
+    public string Text { get; set; }
 
     public TextContent(string text)
     {
         Text = text;
     }
+
+    public static implicit operator TextContent(string text) => new(text);
 }
 
-public class ImageUrlContent : IVisionContent
+public class ImageUrlContent : IMessageContent
 {
     [JsonPropertyName("image_url")]
     public ImageUrl ImageUrl { get; set; } = default!;
@@ -31,6 +33,12 @@ public class ImageUrlContent : IVisionContent
     public ImageUrlContent(string url, string? detail)
     {
         ImageUrl = new ImageUrl { Url = url, Detail = detail };
+    }
+
+    public static async Task<ImageUrlContent> FromFileAsync(string path, string? detail = ImageUrlDetails.Auto)
+    {
+        var imageUrl = await ImageUrl.FromFileAsync(path);
+        return new ImageUrlContent(imageUrl, detail);
     }
 }
 

@@ -64,6 +64,11 @@ public class ImageUrl
         var buffer = await File.ReadAllBytesAsync(path);
         return $"data:{contentType};base64,{Convert.ToBase64String(buffer)}";
     }
+
+    public static string FromBytes(string contentType, byte[] buffer)
+    {
+        return $"data:{contentType};base64,{Convert.ToBase64String(buffer)}";
+    }
 }
 
 public static class ImageUrlDetails

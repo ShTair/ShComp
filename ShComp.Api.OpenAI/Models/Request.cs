@@ -56,6 +56,12 @@ public class Request : IWithModel, IWithMaxTokens, IWithTemperature, IRequestCre
         return this;
     }
 
+    IWithMaxTokens IWithModel.WithGpt4o()
+    {
+        Model = GptModels.Gpt4o;
+        return this;
+    }
+
     IWithMaxTokens IWithModel.With(string modelName)
     {
         Model = modelName;
@@ -87,6 +93,8 @@ public interface IWithModel
     IWithMaxTokens WithGpt3_5Turbo();
 
     IWithMaxTokens WithGpt4Turbo();
+
+    IWithMaxTokens WithGpt4o();
 
     IWithMaxTokens With(string modelName);
 }

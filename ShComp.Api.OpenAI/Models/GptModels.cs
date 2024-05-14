@@ -7,4 +7,7 @@ public class GptModels
 
     /// <summary>GPT-4 Turbo</summary>
     public const string Gpt4Turbo = "gpt-4-turbo";
+
+    /// <summary>GPT-4o</summary>
+    public const string Gpt4o = "gpt-4o";
 }

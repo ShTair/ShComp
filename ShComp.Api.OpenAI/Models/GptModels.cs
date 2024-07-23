@@ -10,4 +10,7 @@ public class GptModels
 
     /// <summary>GPT-4o</summary>
     public const string Gpt4o = "gpt-4o";
+
+    /// <summary>GPT-4o Mini</summary>
+    public const string Gpt4oMini = "gpt-4o-mini";
 }

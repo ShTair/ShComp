@@ -8,7 +8,7 @@ root = true
 end_of_line = crlf
 indent_style = space
 insert_final_newline = true
-charset = utf-8-bom
+charset = utf-8
 # (Please don't specify an indent_size here; that has too many unintended consequences.)
 
 # Code files
@@ -39,7 +39,6 @@ indent_size = 2
 [*.sh]
 end_of_line = lf
 indent_size = 2
-charset = utf-8
 
 # Dotnet code style settings:
 [*.{cs,vb}]

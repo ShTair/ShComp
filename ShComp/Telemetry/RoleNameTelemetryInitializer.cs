@@ -1,9 +1,8 @@
-﻿using Microsoft.ApplicationInsights.Channel;
-using Microsoft.ApplicationInsights.Extensibility;
+﻿using Microsoft.ApplicationInsights;
 
 namespace ShComp.Telemetry;
 
-public class RoleNameTelemetryInitializer : ITelemetryInitializer
+public class RoleNameTelemetryInitializer
 {
     private readonly string _roleName;
 
@@ -12,11 +11,11 @@ public class RoleNameTelemetryInitializer : ITelemetryInitializer
         _roleName = roleName;
     }
 
-    public void Initialize(ITelemetry telemetry)
+    public void Initialize(TelemetryClient client)
     {
-        if (string.IsNullOrEmpty(telemetry.Context.Cloud.RoleName))
+        if (string.IsNullOrEmpty(client.Context.Cloud.RoleName))
         {
-            telemetry.Context.Cloud.RoleName = _roleName;
+            client.Context.Cloud.RoleName = _roleName;
         }
     }
 }

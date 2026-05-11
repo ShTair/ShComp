@@ -248,6 +248,8 @@ dotnet_style_allow_statement_immediately_after_block_experimental = false
 csharp_style_namespace_declarations = file_scoped:silent
 csharp_style_prefer_primary_constructors = true:silent
 
+dotnet_diagnostic.CA1873.severity = none
+
 [src/CodeStyle/**.{cs,vb}]
 # warning RS0005: Do not use generic CodeAction.Create to create CodeAction
 dotnet_diagnostic.RS0005.severity = none
